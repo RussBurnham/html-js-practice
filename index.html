@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html style="font-family: 'Franklin Gothic Medium', sans-serif;">
+<body>
+
+<div>
+	<label for="uid">User Id: </label>
+	<input id="uid"></input>
+    <br>
+    <label for="fname">First Name: </label>
+	<input id="fname"></input>
+    <br>
+	<label for="lname">Last Name: </label>
+	<input id="lname"></input>
+    <br>
+	<label for="bday">Birthday: </label>
+	<input type="date" id="bday"></input>
+    <br>
+	<button id="accept">Accept</button>
+	<p id="message" style="color: red;"></p>
+    <p id="stairCase" 
+        style="color:blue; 
+        font-size: 20px; 
+        letter-spacing: 2px;">
+    </p>	
+</div>
+
+<script>
+    const styleInputs = document.getElementsByTagName("input");
+    for (let i = 0; i < styleInputs.length; i++) {
+        styleInputs[i].style.marginBottom = "5px";
+    }
+	
+	const uid = document.getElementById("uid");
+    const fname = document.getElementById("fname");
+    const lname = document.getElementById("lname");
+    const bday = document.getElementById("bday");
+    const message = document.getElementById("message");
+    const stairCase = document.getElementById("stairCase"); // stairCase at bottom of page
+
+    const acceptButton = document.getElementById("accept");
+    acceptButton.addEventListener("click", handleClick);
+
+    function handleClick() {
+        let invalid = false;
+
+        if (validateUID(uid.value) == false) {
+            message.innerHTML += "Invalid User Id. Needs to be 8-12 characters with one number, one uppercase letter, and one lowercase letter. <br>";
+            invalid = true;
+        }
+        if (notEmpty(fname.value) == false) {
+            message.innerHTML += "Invalid First Name. <br>";
+            invalid = true;
+        }
+        if (notEmpty(lname.value) == false) {
+            message.innerHTML += "Invalid Last Name. <br>";
+            invalid = true;
+        }
+        if (notEmpty(bday.value) == false) {
+            message.innerHTML += "Invalid Birthday. <br>";
+            invalid = true;
+        }
+
+        if (!invalid) {
+            message.style.color = "green";
+            message.style.fontWeight = "750";
+            message.innerHTML = `${fname.value} ${lname.value} you have been breathing for ${dateDiff()} days!`;
+            if (dateDiff() < 365 * 18) {
+                message.innerHTML += "<br> You are probably not old enough to take this class!";
+            }
+        }
+    };
+
+    const validateUID = (str) => {
+        return notEmpty(str) && checkLength(str) && mustContain(str);
+    };
+
+    const notEmpty = (str) => {
+        return str.trim() != "";
+    };
+
+    const checkLength = (str) => {
+        return str.length >= 8 && str.length <= 12;
+    };
+
+    const mustContain = (str) => {
+        return /(?=.*\d)(?=.*[A-Z])(?=.*[a-z])/.test(str);
+    };
+
+    const dateDiff = () => {
+        const today = new Date();
+        const millisecondsAlive = today - new Date(bday.value);
+        const daysAlive = Math.floor(millisecondsAlive / (1000 * 60 * 60 * 24));
+        return daysAlive;
+    };
+
+    //stairCase
+    for (let i = 1; i <= 20; i++) {
+        stairCase.innerHTML += "".padStart(i, "x") + ` - ${i} <br>`;  
+    };
+    
+</script>
+
+</body>
+</html>
